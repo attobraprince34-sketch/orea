@@ -1,0 +1,23 @@
+"""Moteur et sessions de base de données."""
+
+from collections.abc import Iterator
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
+
+from app.core.config import settings
+
+# SQLite (mode local sans Docker) : la connexion est partagée entre les threads de
+# FastAPI, il faut donc lever la restriction « même thread » de sqlite3.
+_connect_args = {"check_same_thread": False} if settings.DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(settings.DATABASE_URL, pool_pre_ping=True, connect_args=_connect_args)
+SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
+
+
+def get_db() -> Iterator[Session]:
+    """Dépendance FastAPI : une session par requête, toujours refermée."""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

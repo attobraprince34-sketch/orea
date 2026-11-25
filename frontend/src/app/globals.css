@@ -1,0 +1,332 @@
+/* ==========================================================================
+   Orea — design system (v2)
+   Direction : fond crème lumineux, grands titres noirs très gras, boutons en
+   pilule, cartes blanches épurées et collages de formes colorées.
+   Couleurs issues de la charte « Le logo Orea » :
+     Émeraude #0F5C47 · Orange retour #F08A24 · Encre #0E1A16 · Menthe #EAF3EF
+   Règle d'accessibilité : l'orange porte TOUJOURS un texte Encre (7,1:1).
+   ========================================================================== */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sora), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-sticker: var(--border);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-brand-50: #ebfbf4;
+  --color-brand-100: #d7f5e9;
+  --color-brand-200: #b5e8d4;
+  --color-brand-300: #8cd2b8;
+  --color-brand-400: #6db299;
+  --color-brand-500: #4e937b;
+  --color-brand-600: #2f755e;
+  --color-brand-700: #0f5c47;
+  --color-brand-800: #014937;
+  --color-brand-900: #003426;
+  --color-brand-950: #002117;
+
+  --color-glow-50: #fff7f1;
+  --color-glow-100: #ffecde;
+  --color-glow-200: #ffd9bd;
+  --color-glow-300: #febf8e;
+  --color-glow-400: #ffa151;
+  --color-glow-500: #f08a24;
+  --color-glow-600: #cb7214;
+  --color-glow-700: #a35908;
+  --color-glow-800: #804300;
+  --color-glow-900: #613201;
+
+  --color-mint: #eaf3ef;
+  --color-cream: #faf8f4;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 1.75rem;
+  --radius-4xl: 2.5rem;
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-spin-slow: spin 18s linear infinite;
+}
+
+:root {
+  --radius: 1rem;
+  --background: #faf8f4;
+  --foreground: #0e1a16;
+  --card: #ffffff;
+  --card-foreground: #0e1a16;
+  --popover: #ffffff;
+  --popover-foreground: #0e1a16;
+  --primary: #0f5c47;
+  --primary-foreground: #ffffff;
+  --secondary: #eaf3ef;
+  --secondary-foreground: #0e1a16;
+  --muted: #f2efe9;
+  --muted-foreground: #5a6560;
+  --accent: #ffecde;
+  --accent-foreground: #0e1a16;
+  --destructive: #c62f2f;
+  --border: #e9e4da;
+  --input: #ddd7cb;
+  --ring: #f08a24;
+  --highlight: #f08a24;
+  --highlight-foreground: #0e1a16;
+  --ink: #0e1a16;
+  --ink-foreground: #ffffff;
+  --shadow-card: 0 1px 2px rgb(14 26 22 / 0.04), 0 12px 32px -18px rgb(14 26 22 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(14 26 22 / 0.05), 0 22px 44px -20px rgb(14 26 22 / 0.28);
+  /* Séries de graphiques validées (luminosité, chroma, daltonisme, contraste). */
+  --chart-1: #028667;
+  --chart-2: #ce7100;
+  --chart-3: #4e937b;
+  --chart-4: #a35908;
+  --chart-5: #8cd2b8;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0e1a16;
+  --sidebar-primary: #0f5c47;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f2efe9;
+  --sidebar-accent-foreground: #0e1a16;
+  --sidebar-border: #e9e4da;
+  --sidebar-ring: #f08a24;
+}
+
+/* Mode sombre : la version inversée de la charte (fond vert profond, point orange). */
+.dark {
+  --background: #0a1310;
+  --foreground: #eef5f1;
+  --card: #12211c;
+  --card-foreground: #eef5f1;
+  --popover: #12211c;
+  --popover-foreground: #eef5f1;
+  --primary: #8cd2b8;
+  --primary-foreground: #0e1a16;
+  --secondary: #0d3a2f;
+  --secondary-foreground: #eef5f1;
+  --muted: #182c26;
+  --muted-foreground: #a6bdb3;
+  --accent: #3a2a17;
+  --accent-foreground: #ffecde;
+  --destructive: #ff7b7b;
+  --border: #213730;
+  --input: #2b453d;
+  --ring: #f08a24;
+  --highlight: #f08a24;
+  --highlight-foreground: #0e1a16;
+  --ink: #eef5f1;
+  --ink-foreground: #0e1a16;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 32px -18px rgb(0 0 0 / 0.6);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.3), 0 22px 44px -20px rgb(0 0 0 / 0.7);
+  --chart-1: #229c7a;
+  --chart-2: #d57712;
+  --chart-3: #4e937b;
+  --chart-4: #ffa151;
+  --chart-5: #d7f5e9;
+  --sidebar: #12211c;
+  --sidebar-foreground: #eef5f1;
+  --sidebar-primary: #8cd2b8;
+  --sidebar-primary-foreground: #0e1a16;
+  --sidebar-accent: #182c26;
+  --sidebar-accent-foreground: #eef5f1;
+  --sidebar-border: #213730;
+  --sidebar-ring: #f08a24;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "cv11", "ss01";
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--color-glow-300);
+    color: #0e1a16;
+  }
+}
+
+@layer components {
+  /* Carte épurée : fond blanc, fine bordure, ombre très douce. */
+  .surface {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-3xl);
+    box-shadow: var(--shadow-card);
+  }
+  .surface-hover {
+    transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 200ms ease;
+  }
+  .surface-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+  /* Ancien nom conservé pour compatibilité : même rendu épuré. */
+  .sticker {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-3xl);
+    box-shadow: var(--shadow-card);
+  }
+  .sticker-interactive {
+    transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 200ms ease;
+  }
+  .sticker-interactive:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  /* Petite étiquette en capitales au-dessus des titres. */
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+
+  /* Grand titre d'affichage, comme la référence : noir, très gras, serré. */
+  .display {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 0.98;
+  }
+
+  .highlight-marker {
+    background: linear-gradient(transparent 60%, var(--color-glow-300) 60%, var(--color-glow-300) 90%, transparent 90%);
+    padding: 0 0.08em;
+  }
+  .dark .highlight-marker {
+    background: linear-gradient(transparent 60%, #a35908 60%, #a35908 90%, transparent 90%);
+  }
+
+  /* Formes du collage (inspirées des formes organiques de la référence). */
+  .shape-leaf { border-radius: 999px 999px 999px 0; }
+  .shape-leaf-r { border-radius: 999px 999px 0 999px; }
+  .shape-drop { border-radius: 999px 999px 999px 32px; }
+  .shape-quarter { border-radius: 100% 0 0 0; }
+  .shape-arch { border-radius: 999px 999px 40px 40px; }
+
+  /* Flèche des listes déroulantes natives (accessibles et fiables sur mobile). */
+  .select-chevron {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%235a6560' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px;
+  }
+
+  .scrollbar-none { scrollbar-width: none; }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+}
+
+@layer utilities {
+  .tabular { font-variant-numeric: tabular-nums; }
+  .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Leaflet aux couleurs d'Orea. */
+.leaflet-container { font-family: var(--font-inter), sans-serif; border-radius: inherit; z-index: 0; }
+.leaflet-popup-content-wrapper { border-radius: 1.25rem; box-shadow: 0 18px 40px -16px rgb(14 26 22 / 0.35); }
+.orea-marker { background: transparent; border: 0; }
+
+/* Carte thermique du centre de contrôle : points qui pulsent. */
+.heat-dot { position: relative; display: grid; place-items: center; }
+.heat-dot::before,
+.heat-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: rgb(240 138 36 / 0.45);
+  animation: heat-pulse 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+.heat-dot::after { animation-delay: 1.2s; }
+.heat-dot > span {
+  position: relative;
+  border-radius: 999px;
+  background: #f08a24;
+  box-shadow: 0 0 24px 6px rgb(240 138 36 / 0.55);
+}
+@keyframes heat-pulse {
+  0% { transform: scale(0.5); opacity: 0.9; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Point « en direct ». */
+.live-dot { position: relative; display: inline-block; width: 8px; height: 8px; border-radius: 999px; background: #2fd196; }
+.live-dot::after {
+  content: ""; position: absolute; inset: 0; border-radius: 999px; background: #2fd196;
+  animation: heat-pulse 1.6s ease-out infinite;
+}

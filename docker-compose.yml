@@ -1,0 +1,88 @@
+# Orea — lancement complet en une commande :
+#
+#     docker compose up --build
+#
+#   Application        : http://localhost:3000
+#   API + Swagger      : http://localhost:8000/docs
+#   Mailpit (e-mails)  : http://localhost:8025
+#
+# Au premier démarrage, l'API applique les migrations puis charge les données de
+# démonstration (comptes de test, points relais, historique). SEED_DEMO=false pour
+# démarrer avec une base vide.
+
+name: orea
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-orea}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orea}
+      POSTGRES_DB: ${POSTGRES_DB:-orea}
+    ports:
+      - "${DB_PORT:-5433}:5432"  # 5433 côté hôte : évite le conflit avec un PostgreSQL local
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-orea} -d $${POSTGRES_DB:-orea}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:v1.21
+    restart: unless-stopped
+    ports:
+      - "8025:8025"  # interface web
+      - "1025:1025"  # SMTP
+
+  api:
+    build: ./backend
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    # Les valeurs ci-dessous sont propres au réseau Docker : elles priment sur le .env.
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-orea}:${POSTGRES_PASSWORD:-orea}@db:5432/${POSTGRES_DB:-orea}
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      MEDIA_DIR: /data/media
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      SEED_DEMO: ${SEED_DEMO:-true}
+    command: >
+      sh -c "alembic upgrade head &&
+             if [ \"$$SEED_DEMO\" = \"true\" ]; then python -m scripts.seed --if-empty; fi &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips='*'"
+    ports:
+      - "8000:8000"
+    volumes:
+      - media:/data/media  # photos floutées : volume privé, jamais servi publiquement
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 40s
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        API_INTERNAL_URL: http://api:8000
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  db-data:
+  media:
